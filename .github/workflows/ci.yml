@@ -220,6 +220,12 @@ jobs:
         if: '!matrix.coverity'
         run: ci/build.sh
         env: {B2_FLAGS: -a boost.locale.icu=off boost.locale.iconv=on}
+
+      - name: Check for ICU
+        run: |
+          cd "$BOOST_ROOT" && ./b2 toolset=gcc cxxstd=03,11 address-model=64 link=shared,static variant=debug,release --reconfigure -d+2 -a libs/locale/build//has_icu || true
+          cd "$BOOST_ROOT" && ./b2 toolset=gcc cxxstd=03,11 address-model=64 link=shared,static variant=debug,release --reconfigure -d+2 -a libs/locale/build//has_icu64 || true
+
       - name: Run tests with ICU
         if: '!matrix.coverity'
         run: ci/build.sh
@@ -281,6 +287,12 @@ jobs:
             cmake -DICU_ROOT="$ICU_ROOT" -DICU_VERSION="71.1" -P tools/download_icu.cmake
             Add-Content $Env:BOOST_ROOT/project-config.jam "path-constant ICU_PATH : `"$ICU_ROOT`" ;"
             Get-Content $Env:BOOST_ROOT/project-config.jam
+
+      - name: Check for ICU
+        shell: bash
+        run: |
+          cd "$BOOST_ROOT" && ./b2 toolset=${{matrix.toolset}} cxxstd=03,11 address-model=64 link=shared,static variant=debug,release --reconfigure -d+2 -a libs/locale/build//has_icu || true
+          cd "$BOOST_ROOT" && ./b2 toolset=${{matrix.toolset}} cxxstd=03,11 address-model=64 link=shared,static variant=debug,release --reconfigure -d+2 -a libs/locale/build//has_icu64 || true
 
       - name: Run tests
         if: '!matrix.coverage'
