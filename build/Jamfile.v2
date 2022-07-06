@@ -6,6 +6,7 @@
 # https://www.boost.org/LICENSE_1_0.txt.
 
 import configure ;
+import errors ;
 import feature ;
 import os ;
 import path ;
@@ -239,6 +240,9 @@ rule configure-full ( properties * : flags-only )
     if $(found-iconv)
     {
         flags-result += <define>BOOST_LOCALE_WITH_ICONV=1 ;
+    } else if <boost.locale.iconv>on in $(properties)
+    {
+        errors.user-error : "Iconv was explicitly requested for Boost.Locale but is not found. Check your configuration!" ;
     }
 
     local found-icu ;
@@ -272,6 +276,9 @@ rule configure-full ( properties * : flags-only )
             result += <source>icu/$(ICU_SOURCES).cpp
                       <library>/boost/thread//boost_thread
                       ;
+        } else if <boost.locale.icu>on in $(properties)
+        {
+            errors.user-error : "ICU was explicitly requested for Boost.Locale but is not found. Check your configuration!" ;
         }
     }
 
