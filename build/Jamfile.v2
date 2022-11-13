@@ -204,6 +204,7 @@ rule configure-full ( properties * : flags-only )
 
     local found-iconv ;
 
+    result += <relevant>boost.locale.iconv ;
     # The system Iconv on Solaris may have bugs, while the GNU Iconv is fine.
     # So enable by default only if not on Solaris.
     if <boost.locale.iconv>on in $(properties)
@@ -226,6 +227,7 @@ rule configure-full ( properties * : flags-only )
 
     local found-icu ;
 
+    result += <relevant>boost.locale.icu ;
     if ! <boost.locale.icu>off in $(properties)
     {
         if [ configure.builds has_icu : $(properties) : "icu" ]
@@ -258,6 +260,7 @@ rule configure-full ( properties * : flags-only )
         result += <build>no ;
     }
 
+    result += <relevant>boost.locale.std ;
     if ! <boost.locale.std> in $(properties:G)
     {
         if <toolset>sun in $(properties)
@@ -284,6 +287,7 @@ rule configure-full ( properties * : flags-only )
         result += <source>std/$(STD_SOURCES).cpp ;
     }
 
+    result += <relevant>boost.locale.winapi ;
     if ! <boost.locale.winapi> in $(properties:G)
     {
         if <target-os>windows in $(properties) || <target-os>cygwin in $(properties)
